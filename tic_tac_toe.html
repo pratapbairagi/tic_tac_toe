@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+
+        .game {
+            width: 92%;
+            max-width: 400px;
+            min-width: 260px;
+            height: max-content;
+            max-height: 100vh;
+            display: flex;
+            gap: 18px;
+            flex-direction: column;
+            transform: rotateZ(0deg);
+
+        }
+
+        .player {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .board {
+            width: 100%;
+            height: max-content;
+            display: flex;
+            justify-content: center;
+        }
+
+        table {
+            width: max-content;
+        }
+
+        table tr {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        table tr td {
+            width: 33%;
+            display: block;
+            min-width: 80px;
+            min-height: 80px;
+            aspect-ratio: 1/1;
+            padding: 15px;
+
+        }
+
+        table tr td input {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: none;
+            font-size: 54px;
+            text-align: center;
+            border-radius: 50%;
+            outline: none;
+            cursor: grab;
+        }
+
+        .player input[type="button"] {
+            background-color: blue;
+            color: white;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50%;
+        }
+
+        .gameOver_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-color: rgba(50, 45, 97, 0.438);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .gameOver_layer button {
+            padding: 8px 22px;
+            font-size: 24px;
+            font-weight: 800;
+            background-color: rgb(0, 149, 255);
+            color: rgb(224, 214, 214);
+            border: none;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .gameOver_layer button:hover {
+            background-color: rgb(8, 123, 205);
+        }
+
+        .activeGameOverLayer {
+            display: flex;
+        }
+
+        @media only screen and (min-width : 764px) {
+            .game {
+                transform: rotateZ(-90deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="gameOver_layer" class="gameOver_layer">
+        <div id="winnerName" style="font-size: 20px; font-weight: 600; color: white;"></div>
+        <button onclick="restartGameFun()">RE-START</button>
+    </div>
+
+    <div class="game">
+        <div class="player player_one" style="background-color: rgb(235, 231, 231); padding: 2px 3px; row-gap: 12px;">
+            <input
+                style="width: calc( 100% - 80px); height: 30px; color: rgb(200, 193, 193); padding: 3px 10px; background-color: white; border: none;"
+                name="one" placeholder="Enter 1st player name" onkeyup="player_entry({v: this, playerType: 'X'})"
+                id="team_one_x">
+            <button
+                style="width: 80px; height: 30px; padding: 0 10px; font-size: 14px; font-weight: 600; background-color: rgb(235, 231, 231); color: grey; border: none; cursor: pointer;"
+                onclick="formSubmit()">SAVE</button>
+            <input
+                style="background-color: rgb(235, 231, 231); color: grey; border: none; width: calc(100% - 80px); display: block; height: 30px; text-align: center; padding: 3px 2px; font-size: 28px; font-weight: 700; outline: none;"
+                readonly type="text" class="playersName" name="one" value="" value="" id="team_one_x_name_display">
+            <span
+                style="color: green; background-color: white; width: 80px; font-size: 28px; font-weight: 700; height: 30px; display: block; text-align: center; line-height: 30px;"
+                id="playerType">X</span>
+        </div>
+        <div class="board">
+            <table>
+                <tr>
+                    <td><input type="text" value="" name="1" id=""></td>
+                    <td><input type="text" value="" name="2" id=""></td>
+                    <td><input type="text" value="" name="3" id=""></td>
+                </tr>
+                <tr>
+                    <td><input type="text" value="" name="4" id=""></td>
+                    <td><input type="text" value="" name="5" id=""></td>
+                    <td><input type="text" value="" name="6" id=""></td>
+                </tr>
+                <tr>
+                    <td><input type="text" value="" name="7" id=""></td>
+                    <td><input type="text" value="" name="8" id=""></td>
+                    <td><input type="text" value="" name="9" id=""></td>
+                </tr>
+            </table>
+        </div>
+        <div class="player player_two" style="background-color: rgb(235, 231, 231); padding: 2px 3px; row-gap: 12px;">
+            <span
+                style="color: red; background-color: white; width: 80px; font-size: 28px; font-weight: 700; height: 30px; display: block; text-align: center; line-height: 30px;"
+                id="playerType"> O</span>
+            <input
+                style="background-color: rgb(235, 231, 231); color: grey; border: none; width: calc(100% - 80px); display: block; height: 30px; text-align: center; padding: 3px 2px; font-size: 28px; font-weight: 700; outline: none;"
+                readonly type="text" class="playersName" name="two" value="" id="team_two_o_name_display">
+            <button
+                style="width: 80px; height: 30px; padding: 0 10px; font-size: 14px; font-weight: 600; background-color: rgb(235, 231, 231); color: grey; border: none; cursor: pointer;"
+                onclick="formSubmit()">SAVE</button>
+            <input
+                style="width: calc( 100% - 80px); height: 30px; color: rgb(200, 193, 193); padding: 3px 10px; background-color: white; border: none;"
+                placeholder="Enter 2nd player name" type="text" name="two"
+                onkeyup="player_entry({v: this, playerType: 'O'})" id="team_two_o">
+
+        </div>
+
+    </div>
+    <script>
+        const td = document.querySelectorAll("td");
+        const input = document.querySelectorAll("td input");
+
+        td.forEach((e, i) => {
+            i % 2 === 0 ? e.style.backgroundColor = "rgb(235, 231, 231)" : e.style.backgroundColor = "white"
+        })
+
+        input.forEach((e, i) => {
+            i % 2 === 0 ? e.style.backgroundColor = "white" : e.style.backgroundColor = "rgb(235, 231, 231)"
+        })
+
+        // players
+
+        let players = [
+            {
+                name: "",
+                type: "red",
+                player: "one"
+            },
+            {
+                name: "",
+                type: "blue",
+                player: "two"
+            }
+        ];
+
+        // player name input
+        let name, player, type
+        function player_entry({ v, playerType }) {
+            name = v.value;
+            player = v.name;
+            type = playerType;
+
+            players = players.filter(e => e.player !== player);
+
+        };
+
+        // submit name
+        function formSubmit() {
+            let storedPlayers = localStorage.getItem("players");
+
+            if (name && type && name) {
+                if (storedPlayers !== undefined && storedPlayers !== null) {
+
+                    storedPlayers = JSON.parse(storedPlayers);
+
+                    storedPlayers = storedPlayers.filter(v => v.name !== "");
+                    if (storedPlayers[0].name) {
+                        let nameExist = storedPlayers.find(v => v.name === name)
+                        if (!nameExist) {
+                            players = storedPlayers.filter(v => v.player !== player)
+                            players.push({ name: name, player: player, type: type })
+
+                            localStorage.setItem("players", JSON.stringify(players));
+                            window.location.reload()
+                        }
+
+                    }
+                }
+                else {
+
+                    players.push({ name: name, player: player, type: type })
+
+                    localStorage.setItem("players", JSON.stringify(players))
+                    window.location.reload()
+
+                }
+
+
+            }
+        };
+
+        // on window load
+        window.onload = function () {
+            let playersName = document.querySelectorAll(".playersName");
+            let storedPlayers = localStorage.getItem("players");
+
+            if (storedPlayers !== undefined && storedPlayers !== null) {
+                playersName.forEach((p, i) => {
+                    storedPlayers = JSON.parse(localStorage.getItem("players"));
+                    storedPlayers.map((v, vi) => {
+                        if (v.player === p.name)
+                            return p.value = v.name
+                    })
+                })
+            }
+        }
+
+
+
+        // game table functions
+        let plays = []
+        let game_winSequence = [
+            { seq: [1, 2, 3], seq_no: 1, player: "", win: false },
+            { seq: [4, 5, 6], seq_no: 2, player: "", win: false },
+            { seq: [7, 8, 9], seq_no: 3, player: "", win: false },
+            { seq: [1, 4, 7], seq_no: 4, player: "", win: false },
+            { seq: [2, 5, 8], seq_no: 5, player: "", win: false },
+            { seq: [3, 6, 9], seq_no: 6, player: "", win: false },
+            { seq: [1, 5, 9], seq_no: 7, player: "", win: false },
+            { seq: [3, 5, 7], seq_no: 8, player: "", win: false },
+        ]
+        const gameButtons = document.querySelectorAll("table input")
+        gameButtons.forEach((v, i) => {
+            let storedLastTurn = localStorage.getItem("storedLastTurn")
+            plays.push({ type: "", value: "", player: "", played: false, buttonNo: v.name })
+
+            v.addEventListener("click", function (e) {
+
+                let storedPlayers = localStorage.getItem("players")
+                if (storedPlayers !== undefined && storedPlayers !== null && document.getElementById("team_one_x_name_display").value && document.getElementById("team_two_o_name_display").value) {
+                    storedPlayers = JSON.parse(localStorage.getItem("players"));
+
+                    let isFistTurn = plays.find(f => f.played)
+                    if (!isFistTurn) {
+
+                        v.value = "X";
+                        v.style.color = "green";
+
+                        plays = plays.map(f => f.buttonNo === v.name ? { played: true, buttonNo: v.name, player: "one", value: "X" } : f)
+                        localStorage.setItem("storedLastTurn", JSON.stringify(v.value))
+
+                    }
+                    else {
+                        if (localStorage.getItem("storedLastTurn")) {
+                            storedLastTurn = JSON.parse(localStorage.getItem("storedLastTurn"))
+                        }
+
+                        let game;
+                        if (storedLastTurn === "X") {
+
+                            plays = plays.map(f => f.buttonNo === v.name ? { played: true, buttonNo: v.name, player: "two", value: "O" } : f)
+                            v.value = "O";
+                            v.style.color = "red"
+                            localStorage.setItem("storedLastTurn", JSON.stringify("O"))
+
+
+
+                            let playedBy_one = plays.filter((x) => x.value === "O")
+
+                            if (playedBy_one.length >= 3) {
+                                let y = []
+                                game_winSequence.forEach((s, si) => {
+                                    let x = []
+                                    s.seq.forEach((ss, ssi) => {
+
+                                        x.push(playedBy_one.filter(x => x.buttonNo == ss)[0] ? playedBy_one.filter(x => x.buttonNo == ss)[0] : { played: true, buttonNo: '', player: '', value: '' })
+                                    })
+
+                                    game_winSequence.map((l => {
+                                        let y = []
+
+                                        l.seq.forEach((yy) => {
+                                            let test = x.find(f => f.buttonNo == yy);
+
+                                            if (test) {
+                                                y.push({ ...test, seq_line: l.seq_no })
+                                            }
+                                        })
+
+                                        y = y.length >= 3 && { player: y[0].player, seq_line: y[0].seq_line, value: y[0].value }
+
+                                        if (y) {
+                                            return game = y
+                                        }
+                                    }))
+                                })
+
+                                let winNumbers = []
+                                gameButtons.forEach((el, ind) => {
+                                    let node = [];
+                                    if (game && game.value.toUpperCase() === el.value.toUpperCase()) {
+
+                                        let winNumbersX = []
+                                        game_winSequence.forEach((f, fInd) => {
+                                            winNumbersX = f.seq_no == game.seq_line && { ...f, player: game.player, win: true }
+
+                                            if (winNumbersX) {
+                                                winNumbers.push(winNumbersX)
+                                            }
+                                        })
+                                    }
+                                })
+                                for (let x = 0; x <= gameButtons.length; x++) {
+                                    winNumbers[0]?.seq.map((colorEle) => { //// doubt and error thats why added "?"
+                                        if (colorEle - 1 === x) {
+                                            gameButtons[x].style.backgroundColor = "red"
+                                            gameButtons[x].style.color = "white";
+                                            setTimeout(() => {
+                                                document.getElementById("gameOver_layer").classList.add("activeGameOverLayer")
+                                                document.getElementById("winnerName").innerHTML = storedPlayers.filter(p => p.player === winNumbers[0].player)[0].name.toUpperCase() + " WINS"
+
+                                            }, [1000])
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                        else {
+
+                            plays = plays.map(f => f.buttonNo === v.name ? { played: true, buttonNo: v.name, player: "one", value: "X" } : f)
+                            v.value = "X";
+                            v.style.color = "green"
+                            localStorage.setItem("storedLastTurn", JSON.stringify("X"))
+
+                            let playedBy_one = plays.filter((x) => x.value === "X")
+
+                            if (playedBy_one.length >= 3) {
+                                let y = []
+                                game_winSequence.forEach((s, si) => {
+                                    let x = []
+                                    s.seq.forEach((ss, ssi) => {
+
+                                        x.push(playedBy_one.filter(x => x.buttonNo == ss)[0] ? playedBy_one.filter(x => x.buttonNo == ss)[0] : { played: true, buttonNo: '', player: '', value: '' })
+                                    })
+
+                                    game_winSequence.map((l => {
+                                        let y = []
+
+                                        l.seq.forEach((yy) => {
+                                            let test = x.find(f => f.buttonNo == yy);
+
+                                            if (test) {
+                                                y.push({ ...test, seq_line: l.seq_no })
+                                            }
+                                        })
+
+                                        y = y.length >= 3 && { player: y[0].player, seq_line: y[0].seq_line, value: y[0].value }
+
+                                        if (y) {
+                                            return game = y
+                                        }
+                                    }))
+                                })
+
+                                let winNumbers = []
+                                gameButtons.forEach((el, ind) => {
+                                    let node = [];
+                                    if (game && game.value.toUpperCase() === el.value.toUpperCase()) {
+
+                                        let winNumbersX = []
+                                        game_winSequence.forEach((f, fInd) => {
+                                            winNumbersX = f.seq_no == game.seq_line && { ...f, player: game.player, win: true }
+
+                                            if (winNumbersX) {
+                                                winNumbers.push(winNumbersX)
+                                            }
+                                        })
+                                    }
+                                })
+                                for (let x = 0; x <= gameButtons.length; x++) {
+                                    winNumbers[0]?.seq.map((colorEle) => { //// doubt and error thats why added "?"
+                                        if (colorEle - 1 === x) {
+                                            gameButtons[x].style.backgroundColor = "green"
+                                            gameButtons[x].style.color = "white";
+                                            setTimeout(() => {
+                                                document.getElementById("gameOver_layer").classList.add("activeGameOverLayer")
+                                                document.getElementById("winnerName").innerHTML = storedPlayers.filter(p => p.player === winNumbers[0].player)[0].name.toUpperCase() + " WINS"
+
+                                            }, [1000])
+                                        }
+                                    })
+                                }
+                            }
+
+                        }
+                    }
+                }
+                else {
+
+                    document.getElementById("team_one_x").style.border = "1px solid red"
+                    document.getElementById("team_two_o").style.border = "1px solid red"
+
+                }
+            })
+
+
+        })
+
+        // restart game 
+        function restartGameFun() {
+            document.getElementById("gameOver_layer").classList.remove("activeGameOverLayer");
+            localStorage.removeItem("storedLastTurn")
+            window.location.reload()
+        }
+    </script>
+
+</body>
+
+</html>
