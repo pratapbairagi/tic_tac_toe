@@ -19,6 +19,10 @@
             display: grid;
             place-items: center;
             position: relative;
+            background-image: url("https://thumbs.dreamstime.com/b/grey-white-abstract-hi-tech-video-animation-grey-white-abstract-hi-tech-motion-background-seamless-looping-video-animation-132824209.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         .game {
@@ -45,18 +49,30 @@
             width: 100%;
             height: max-content;
             display: flex;
-            margin: 20px 0;
+            margin: 20px auto;
             justify-content: center;
+            padding: 0;
         }
 
         table {
-            width: max-content;
+            width: 100%;
+            margin: auto;
+            padding: 0;
         }
 
         table tr {
             width: 100%;
             height: 100%;
             display: flex;
+            justify-content: center;
+        }
+
+        table tr:first-child {
+            border-top: 5px double green;
+        }
+
+        table tr:last-child {
+            border-bottom: 5px double red;
         }
 
         table tr td {
@@ -111,29 +127,43 @@
             padding: 8px 22px;
             font-size: 24px;
             font-weight: 800;
-            background-color: rgb(0, 149, 255);
+            background-color: green;
             color: rgb(224, 214, 214);
             border: none;
             letter-spacing: 1px;
             cursor: pointer;
             display: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .restart_btn {
-            display: block;
-            max-width: 260px;
-            width: 90%;
+            display: grid;
+            place-items: center;
+            /* max-width: 260px; */
+            width: 100%;
+            min-height: 38px;
+            padding: 0;
             margin: 0 auto;
             font-size: 20px;
-            padding: 8px 10px;
             border-top-left-radius: 12px;
             border-top-right-radius: 12px;
+            background-color: green;
+            background-image: url("https://www.enjpg.com/img/2020/green-aesthetics-background-9-e1603402017361.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
         }
 
         .restart_btn:last-child {
             border-radius: 0;
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
+            background-color: red;
+            background-image: url("https://www.enjpg.com/img/2020/red-background-10.jpg");
+            background-repeat: no-repeat;
+            background-position: top;
+            background-size: cover;
         }
 
         .player span {
@@ -354,7 +384,7 @@
 
                 let nameFields = document.querySelectorAll(".player_entry_form input")
 
-                nameFields.forEach(v => console.log("value", v.value ? v.parentElement.style.border = "none" : v.parentElement.style.border = "2px solid red"))
+                nameFields.forEach(v => console.log("value", v.value ? v.parentElement.style.border = "none" : v.parentElement.style.border = "22px solid red"))
 
                 let overLayer = document.getElementById("gameOver_layer");
                 overLayer.classList.add("activeGameOverLayer")
@@ -366,9 +396,9 @@
             let playersName = document.querySelectorAll(".playersName");
             let storedPlayers = localStorage.getItem("players");
 
-            // check - does any input field used
+            // circle border - first time it will border green all input circle 
             input.forEach((v, i) => {
-                if (!v.value) v.style.border = "2px solid green"
+                if (!v.value) v.style.border = "22px solid green"
             })
 
 
@@ -383,11 +413,9 @@
                 })
             }
             else {
-
                 // if player name is not stored then call layer so that player can enter name
                 gameOver_layer()
             }
-
         }
 
         // layer function
@@ -418,32 +446,27 @@
 
             v.addEventListener("click", function (e) {
 
-
                 let storedPlayers = localStorage.getItem("players")
                 if (storedPlayers !== undefined && storedPlayers !== null && document.getElementById("team_one_x_name_display").value && document.getElementById("team_two_o_name_display").value) {
                     storedPlayers = JSON.parse(localStorage.getItem("players"));
                     let lastTurnMatch = localStorage.getItem("storedLastTurn");
-
-                    
 
                     let isFistTurn = plays.find(f => f.played)
                     if (!isFistTurn) {
 
                         v.value = "X";
                         v.style.color = "green";
-                        input.forEach((bordreColor )=>{
-                            
-                            if( !bordreColor.value){
-                                bordreColor.style.border = "2px solid red"
-                                v.style.border = "none"
 
+                        // circle border
+                        input.forEach((bordreColor) => {
+                            if (!bordreColor.value) {
+                                bordreColor.style.border = "22px solid red"
+                                v.style.border = "none"
                             }
                         })
-                       
 
                         plays = plays.map(f => f.buttonNo === v.name ? { played: true, buttonNo: v.name, player: "one", value: "X" } : f)
                         localStorage.setItem("storedLastTurn", JSON.stringify(v.value))
-
                     }
                     else {
 
@@ -465,10 +488,7 @@
                             }, 1000);
 
                             return ""
-
                         }
-
-                        
 
                         if (localStorage.getItem("storedLastTurn")) {
                             storedLastTurn = JSON.parse(localStorage.getItem("storedLastTurn"))
@@ -478,21 +498,19 @@
 
                         if (storedLastTurn === "X") {
 
-                            input.forEach((bordreColor,i )=>{
-                            if( !bordreColor.value){
-                                    bordreColor.style.border = "2px solid green" ;
-                                    input.forEach((f)=> {  if(f.value) f.style.border = "none" })
+                            // circle border
+                            input.forEach((bordreColor, i) => {
+                                if (!bordreColor.value) {
+                                    bordreColor.style.border = "22px solid green";
+                                    input.forEach((f) => { if (f.value) f.style.border = "none" })
                                     v.style.border = "none"
-                            }
-                        })
-
+                                }
+                            })
 
                             plays = plays.map(f => f.buttonNo === v.name ? { played: true, buttonNo: v.name, player: "two", value: "O" } : f)
                             v.value = "O";
                             v.style.color = "red"
                             localStorage.setItem("storedLastTurn", JSON.stringify("O"))
-
-
 
                             let playedBy_one = plays.filter((x) => x.value === "O")
 
@@ -557,14 +575,14 @@
                         }
                         else {
 
-                            input.forEach((bordreColor,i )=>{
-                            if( !bordreColor.value){
-                                    bordreColor.style.border = "2px solid red"
-                                    input.forEach((f)=> {  if(f.value) f.style.border = "none" })
+                            // circle border
+                            input.forEach((bordreColor, i) => {
+                                if (!bordreColor.value) {
+                                    bordreColor.style.border = "22px solid red"
+                                    input.forEach((f) => { if (f.value) f.style.border = "none" })
                                     v.style.border = "none"
-
-                            }
-                        })
+                                }
+                            })
 
                             plays = plays.map(f => f.buttonNo === v.name ? { played: true, buttonNo: v.name, player: "one", value: "X" } : f)
                             v.value = "X";
@@ -636,16 +654,11 @@
                     }
                 }
                 else {
-
+                    // if player does not enter both input filed then error border will show on input field
                     document.getElementById("team_one_x").style.border = "1px solid red"
                     document.getElementById("team_two_o").style.border = "1px solid red"
-
                 }
-
-
             })
-
-
         })
 
         // restart game 
