@@ -28,7 +28,7 @@
             height: max-content;
             max-height: 100vh;
             display: flex;
-            gap: 18px;
+            gap: 8px;
             flex-direction: column;
             transform: rotateZ(0deg);
 
@@ -45,6 +45,7 @@
             width: 100%;
             height: max-content;
             display: flex;
+            margin: 10px 0;
             justify-content: center;
         }
 
@@ -119,6 +120,7 @@
 
         .restart_btn{
             display: block;
+            padding: 4px 0;
         }
 
         .player span {
@@ -209,6 +211,10 @@
     </div>
 
     <div class="game">
+
+        <button class="restart_btn" onclick="resetPlayers()">RESET PLAYERS</button>
+
+
         <div class="player player_one" style="background-color: rgb(235, 231, 231); padding: 0; row-gap: 5px;">
 
 
@@ -572,6 +578,12 @@
         function restartGameFun() {
             document.getElementById("gameOver_layer").classList.remove("activeGameOverLayer");
             localStorage.removeItem("storedLastTurn")
+            window.location.reload()
+        }
+
+        // reset players 
+        function resetPlayers (){
+            localStorage.removeItem("players")
             window.location.reload()
         }
     </script>
