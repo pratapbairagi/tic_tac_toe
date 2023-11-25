@@ -105,7 +105,7 @@
             gap: 16px;
         }
 
-        .gameOver_layer button {
+        .gameOver_layer button, .restart_btn {
             padding: 8px 22px;
             font-size: 24px;
             font-weight: 800;
@@ -114,6 +114,42 @@
             border: none;
             letter-spacing: 1px;
             cursor: pointer;
+            display: none;
+        }
+
+        .restart_btn{
+            display: block;
+        }
+
+        .player span {
+            color: white;
+            background-color: green;
+            width: 20%;
+            font-size: 28px;
+            font-weight: 700;
+            height: 30px;
+            display: block;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .player_two span {
+            background-color: red;
+
+        }
+
+        .player_entry_form {
+            width: 90%;
+            max-width: 400px;
+            display: none;
+            gap: 10px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .active_player_entry_form {
+            display: flex;
         }
 
         .gameOver_layer button:hover {
@@ -122,6 +158,24 @@
 
         .activeGameOverLayer {
             display: flex;
+        }
+
+        .active_used_place_error {
+            width: 90%;
+            height: 70px;
+            max-width: 300px;
+            position: absolute;
+            margin: auto;
+            top: calc(50% - 35px);
+            z-index: 1;
+            font-size: 30px;
+            font-weight: 500;
+            text-align: center;
+            display: grid;
+            place-items: center;
+            background-color: rgb(255, 0, 0);
+            border-radius: 6px;
+            color: white;
         }
 
         @media only screen and (min-width : 764px) {
@@ -137,65 +191,79 @@
     <div id="gameOver_layer" class="gameOver_layer">
         <div id="winnerName" style="font-size: 20px; font-weight: 600; color: white;"></div>
         <button onclick="restartGameFun()">RE-START</button>
+        <div class="player_entry_form">
+            <input
+                style=" border-radius: 8px; text-align: center; width: calc( 100% - 80px); height: 42px; color: rgb(200, 193, 193); padding: 3px 10px; background-color: white; border: none; outline: none;"
+                name="one" placeholder="Enter 1st player name" onkeyup="player_entry({v: this, playerType: 'X'})"
+                id="team_one_x">
+
+
+            <button onclick="formSubmit()" style="width: 50%; display: block;">START</button>
+
+
+            <input
+                style="border-radius: 8px; text-align: center; width: calc( 100% - 80px); height: 42px; color: rgb(200, 193, 193); padding: 3px 10px; background-color: white; border: none; outline: none;"
+                placeholder="Enter 2nd player name" type="text" name="two"
+                onkeyup="player_entry({v: this, playerType: 'O'})" id="team_two_o">
+        </div>
     </div>
 
     <div class="game">
-        <div class="player player_one" style="background-color: rgb(235, 231, 231); padding: 2px 3px; row-gap: 12px;">
+        <div class="player player_one" style="background-color: rgb(235, 231, 231); padding: 0; row-gap: 5px;">
+
+
+
+            <span id="playerType">X</span>
+            <span id="playerType">X</span>
+            <span id="playerType">X</span>
+            <span id="playerType">X</span>
+            <span id="playerType">X</span>
+
             <input
-                style="width: calc( 100% - 80px); height: 30px; color: rgb(200, 193, 193); padding: 3px 10px; background-color: white; border: none; outline: none;"
-                name="one" placeholder="Enter 1st player name" onkeyup="player_entry({v: this, playerType: 'X'})"
-                id="team_one_x">
-            <button
-                style="width: 80px; height: 30px; padding: 0 10px; font-size: 14px; font-weight: 600; background-color: rgb(235, 231, 231); color: grey; border: none; cursor: pointer;"
-                onclick="formSubmit()">SAVE</button>
-            <input
-                style="background-color: rgb(235, 231, 231); color: grey; border: none; width: calc(100% - 80px); display: block; height: 30px; text-align: center; padding: 3px 2px; font-size: 28px; font-weight: 700; outline: none;"
+                style=" background-color: rgb(235, 231, 231); color: grey; border: none; text-transform: uppercase; width: 100%; display: block; height: calc(100% - 30px); text-align: center; padding: 3px 2px; font-size: 28px; font-weight: 700; outline: none;"
                 readonly type="text" class="playersName" name="one" value="" value="" id="team_one_x_name_display">
-            <span
-                style="color: green; background-color: white; width: 80px; font-size: 28px; font-weight: 700; height: 30px; display: block; text-align: center; line-height: 30px;"
-                id="playerType">X</span>
+
         </div>
         <div class="board">
             <table>
                 <tr>
-                    <td><input type="text" value="" name="1" id=""></td>
-                    <td><input type="text" value="" name="2" id=""></td>
-                    <td><input type="text" value="" name="3" id=""></td>
+                    <td><input readonly type="text" value="" name="1" id=""></td>
+                    <td><input readonly type="text" value="" name="2" id=""></td>
+                    <td><input readonly type="text" value="" name="3" id=""></td>
                 </tr>
                 <tr>
-                    <td><input type="text" value="" name="4" id=""></td>
-                    <td><input type="text" value="" name="5" id=""></td>
-                    <td><input type="text" value="" name="6" id=""></td>
+                    <td><input readonly type="text" value="" name="4" id=""></td>
+                    <td><input readonly type="text" value="" name="5" id=""></td>
+                    <td><input readonly type="text" value="" name="6" id=""></td>
                 </tr>
                 <tr>
-                    <td><input type="text" value="" name="7" id=""></td>
-                    <td><input type="text" value="" name="8" id=""></td>
-                    <td><input type="text" value="" name="9" id=""></td>
+                    <td><input readonly type="text" value="" name="7" id=""></td>
+                    <td><input readonly type="text" value="" name="8" id=""></td>
+                    <td><input readonly type="text" value="" name="9" id=""></td>
                 </tr>
             </table>
         </div>
-        <div class="player player_two" style="background-color: rgb(235, 231, 231); padding: 2px 3px; row-gap: 12px;">
-            <span
-                style="color: red; background-color: white; width: 80px; font-size: 28px; font-weight: 700; height: 30px; display: block; text-align: center; line-height: 30px;"
-                id="playerType"> O</span>
-            <input
-                style="background-color: rgb(235, 231, 231); color: grey; border: none; width: calc(100% - 80px); display: block; height: 30px; text-align: center; padding: 3px 2px; font-size: 28px; font-weight: 700; outline: none;"
-                readonly type="text" class="playersName" name="two" value="" id="team_two_o_name_display">
-            <button
-                style="width: 80px; height: 30px; padding: 0 10px; font-size: 14px; font-weight: 600; background-color: rgb(235, 231, 231); color: grey; border: none; cursor: pointer;"
-                onclick="formSubmit()">SAVE</button>
-            <input
-                style="width: calc( 100% - 80px); height: 30px; color: rgb(200, 193, 193); padding: 3px 10px; background-color: white; border: none; outline: none;"
-                placeholder="Enter 2nd player name" type="text" name="two"
-                onkeyup="player_entry({v: this, playerType: 'O'})" id="team_two_o">
+        <div class="player player_two" style="background-color: rgb(235, 231, 231); padding: 0; row-gap: 5;">
 
+            <input
+                style="background-color: rgb(235, 231, 231); color: grey; border: none; text-transform: uppercase; width: 100%; display: block; height: calc(100% - 30px); text-align: center; padding: 3px 2px; font-size: 28px; font-weight: 700; outline: none;"
+                readonly type="text" class="playersName" name="two" value="" id="team_two_o_name_display">
+
+            <span id="playerType"> O</span>
+            <span id="playerType"> O</span>
+            <span id="playerType"> O</span>
+            <span id="playerType"> O</span>
+            <span id="playerType"> O</span>
         </div>
+
+        <button class="restart_btn" onclick="restartGameFun()">RESET</button>
 
     </div>
     <script>
         const td = document.querySelectorAll("td");
         const input = document.querySelectorAll("td input");
 
+        // game board color pattern
         td.forEach((e, i) => {
             i % 2 === 0 ? e.style.backgroundColor = "rgb(235, 231, 231)" : e.style.backgroundColor = "white"
         })
@@ -205,16 +273,15 @@
         })
 
         // players
-
         let players = [
             {
                 name: "",
-                type: "red",
+                type: "",
                 player: "one"
             },
             {
                 name: "",
-                type: "blue",
+                type: "",
                 player: "two"
             }
         ];
@@ -222,46 +289,30 @@
         // player name input
         let name, player, type
         function player_entry({ v, playerType }) {
-            name = v.value;
-            player = v.name;
-            type = playerType;
+            players = players.filter((p, i) => {
+                return p.player !== v.name
+            })
 
-            players = players.filter(e => e.player !== player);
+            players = [...players, {
+                name: v.value,
+                type: playerType,
+                player: v.name
+            }]
 
         };
 
         // submit name
         function formSubmit() {
-            let storedPlayers = localStorage.getItem("players");
+            let isBothPlayersNameExist = players.filter(f => f.name !== "")
 
-            if (name && type && name) {
-                if (storedPlayers !== undefined && storedPlayers !== null) {
+            if (isBothPlayersNameExist.length === 2) {
+                localStorage.setItem("players", JSON.stringify(isBothPlayersNameExist))
+                window.location.reload()
+            }
+            else {
 
-                    storedPlayers = JSON.parse(storedPlayers);
-
-                    storedPlayers = storedPlayers.filter(v => v.name !== "");
-                    if (storedPlayers[0].name) {
-                        let nameExist = storedPlayers.find(v => v.name === name)
-                        if (!nameExist) {
-                            players = storedPlayers.filter(v => v.player !== player)
-                            players.push({ name: name, player: player, type: type })
-
-                            localStorage.setItem("players", JSON.stringify(players));
-                            window.location.reload()
-                        }
-
-                    }
-                }
-                else {
-
-                    players.push({ name: name, player: player, type: type })
-
-                    localStorage.setItem("players", JSON.stringify(players))
-                    window.location.reload()
-
-                }
-
-
+                let overLayer = document.getElementById("gameOver_layer");
+                overLayer.classList.add("activeGameOverLayer")
             }
         };
 
@@ -270,6 +321,7 @@
             let playersName = document.querySelectorAll(".playersName");
             let storedPlayers = localStorage.getItem("players");
 
+            // display player name if stored
             if (storedPlayers !== undefined && storedPlayers !== null) {
                 playersName.forEach((p, i) => {
                     storedPlayers = JSON.parse(localStorage.getItem("players"));
@@ -279,6 +331,19 @@
                     })
                 })
             }
+            else {
+
+                // if player name is not stored then call layer so that player can enter name
+                gameOver_layer()
+            }
+
+        }
+
+        // layer function
+        function gameOver_layer() {
+            let overLayer = document.getElementById("gameOver_layer");
+            overLayer.classList.add("activeGameOverLayer")
+            document.querySelectorAll(".player_entry_form")[0].classList.add("active_player_entry_form")
         }
 
 
@@ -302,9 +367,13 @@
 
             v.addEventListener("click", function (e) {
 
+
                 let storedPlayers = localStorage.getItem("players")
                 if (storedPlayers !== undefined && storedPlayers !== null && document.getElementById("team_one_x_name_display").value && document.getElementById("team_two_o_name_display").value) {
                     storedPlayers = JSON.parse(localStorage.getItem("players"));
+                    let lastTurnMatch = localStorage.getItem("storedLastTurn");
+
+
 
                     let isFistTurn = plays.find(f => f.played)
                     if (!isFistTurn) {
@@ -317,6 +386,29 @@
 
                     }
                     else {
+
+                        if (!lastTurnMatch) {
+                            return ""
+                        }
+
+                        // if clicked place which is already used == not allowed -- will throw error
+                        lastTurnMatch = JSON.parse(lastTurnMatch)
+                        if (lastTurnMatch === v.value || v.value) {
+                            let elem = document.createElement("div")
+                            elem.classList.add("active_used_place_error")
+                            elem.innerHTML = "Already Used place !"
+                            let body = document.querySelectorAll("body")[0]
+                            body.appendChild(elem)
+
+                            setTimeout(() => {
+                                return body.removeChild(elem)
+                            }, 1000);
+
+                            return ""
+
+                        }
+
+
                         if (localStorage.getItem("storedLastTurn")) {
                             storedLastTurn = JSON.parse(localStorage.getItem("storedLastTurn"))
                         }
@@ -384,8 +476,9 @@
                                             setTimeout(() => {
                                                 document.getElementById("gameOver_layer").classList.add("activeGameOverLayer")
                                                 document.getElementById("winnerName").innerHTML = storedPlayers.filter(p => p.player === winNumbers[0].player)[0].name.toUpperCase() + " WINS"
+                                                document.querySelector(".gameOver_layer button").style.display = "block"
 
-                                            }, [1000])
+                                            }, [10])
                                         }
                                     })
                                 }
@@ -450,9 +543,10 @@
                                             gameButtons[x].style.color = "white";
                                             setTimeout(() => {
                                                 document.getElementById("gameOver_layer").classList.add("activeGameOverLayer")
-                                                document.getElementById("winnerName").innerHTML = storedPlayers.filter(p => p.player === winNumbers[0].player)[0].name.toUpperCase() + " WINS"
+                                                document.getElementById("winnerName").innerHTML = storedPlayers.filter(p => p.player === winNumbers[0].player)[0].name.toUpperCase() + " WINS";
+                                                document.querySelector(".gameOver_layer button").style.display = "block"
 
-                                            }, [1000])
+                                            }, [10])
                                         }
                                     })
                                 }
@@ -467,6 +561,8 @@
                     document.getElementById("team_two_o").style.border = "1px solid red"
 
                 }
+
+
             })
 
 
